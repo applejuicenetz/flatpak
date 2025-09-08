@@ -1,0 +1,6 @@
+[Flatpak Ref]
+Title=appleJuic Collector
+Name=org.applejuicenetz.collector
+Branch=stable
+Url=https://applejuicenetz.github.io/flatpak-repo/repo
+IsRuntime=false
