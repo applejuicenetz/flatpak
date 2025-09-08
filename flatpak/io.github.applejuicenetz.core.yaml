@@ -1,0 +1,108 @@
+app-id: io.github.applejuicenetz.core
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: ajcore
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.openjdk21
+build-options:
+  no-debuginfo: true
+finish-args:
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --filesystem=~/appleJuice
+  - --filesystem=/media
+  - --filesystem=/run/media
+  - --filesystem=/mnt
+  - --env=PATH=/app/jre/bin:/app/bin:/usr/bin
+  - --env=JAVA_HOME=/app/jre
+modules:
+  - name: openjdk
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/openjdk21/install.sh
+
+  - name: binary
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 -t /app/share/io.github.applejuicenetz.core/ ajcore.jar
+    sources:
+      - type: file
+        url: https://github.com/applejuicenetz/core/releases/download/0.31.149.113/ajcore.jar
+        sha256: 20aad1685b120e00c88c42bd64da257c461419646f370c9499bab12e57e617d1
+        dest-filename: ajcore.jar
+
+  - name: network-lib
+    buildsystem: simple
+    build-options:
+    build-commands:
+      - install -Dm644 -t /app/share/io.github.applejuicenetz.core/ libajnetmask.so
+    sources:
+      - type: file
+        url: https://github.com/applejuicenetz/ajnetmask/releases/download/1.0.0/libajnetmask-amd64.so
+        sha256: 29325346b529fb4db620aba87a329fbe022d81c8a679be862c8b5b58f2ad19d8
+        dest-filename: libajnetmask.so
+        only-arches:
+          - x86_64
+
+      - type: file
+        url: https://github.com/applejuicenetz/ajnetmask/releases/download/1.0.0/libajnetmask-arm64.so
+        sha256: 17ecb9f34391cf41d27dbb00ff598533a8cb46e4411d605dd9dfe91a7da62de1
+        dest-filename: libajnetmask.so
+        only-arches:
+          - aarch64
+
+      - type: file
+        url: https://github.com/applejuicenetz/ajnetmask/releases/download/1.0.0/libajnetmask-arm.so
+        sha256: cfae6fdc8dd7f48c5cfdf190f8d80fc1f8bcb134af2afde53a589fc1a30a8b70
+        dest-filename: libajnetmask.so
+        only-arches:
+          - arm
+
+      - type: file
+        url: https://github.com/applejuicenetz/ajnetmask/releases/download/1.0.0/libajnetmask-386.so
+        sha256: d8ae1af7e9a538381fff4bc3f3beb44022ae1cef31cae417717ce40e3388721a
+        dest-filename: libajnetmask.so
+        only-arches:
+          - i386
+
+  - name: starter
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 io.github.applejuicenetz.core.sh /app/bin/ajcore
+    sources:
+      - type: file
+        path: ./core/io.github.applejuicenetz.core.sh
+
+  - name: app-icon
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.core.png /app/share/icons/hicolor/512x512/apps/io.github.applejuicenetz.core.png
+    sources:
+      - type: file
+        path: ./core/io.github.applejuicenetz.core.png
+
+  - name: splash-image
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.core.splash.png /app/share/io.github.applejuicenetz.core/splash.png
+    sources:
+      - type: file
+        path: ./core/io.github.applejuicenetz.core.splash.png
+
+  - name: desktop-file
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.core.desktop /app/share/applications/io.github.applejuicenetz.core.desktop
+    sources:
+      - type: file
+        path: ./core/io.github.applejuicenetz.core.desktop
+
+  - name: metainfo
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.core.metainfo.xml /app/share/metainfo/io.github.applejuicenetz.core.metainfo.xml
+    sources:
+      - type: file
+        path: ./core/io.github.applejuicenetz.core.metainfo.xml

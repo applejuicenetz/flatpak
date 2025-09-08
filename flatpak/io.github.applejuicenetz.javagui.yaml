@@ -1,0 +1,73 @@
+app-id: io.github.applejuicenetz.javagui
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: ajgui
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.openjdk21
+build-options:
+  no-debuginfo: true
+finish-args:
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --filesystem=~/appleJuice
+  - --env=PATH=/app/jre/bin:/app/bin:/usr/bin
+  - --env=JAVA_HOME=/app/jre
+modules:
+  - name: openjdk
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/openjdk21/install.sh
+
+  - name: files
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/io.github.applejuicenetz.javagui/
+      - mv AJCoreGUI/* /app/share/io.github.applejuicenetz.javagui/
+    sources:
+      - type: archive
+        url: https://github.com/applejuicenetz/gui-java/releases/download/0.85.1/AJCoreGUI.zip
+        strip-components: 0
+        sha256: 05a030929198dca3ee9bd185b1a5f5c7fed0afa6e72ef96f6cf086ba0ff05cb7
+        dest: AJCoreGUI
+
+  - name: starter
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 io.github.applejuicenetz.javagui.sh /app/bin/ajgui
+    sources:
+      - type: file
+        path: ./javagui/io.github.applejuicenetz.javagui.sh
+
+  - name: icon
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.javagui.png /app/share/icons/hicolor/512x512/apps/io.github.applejuicenetz.javagui.png
+    sources:
+      - type: file
+        path: ./javagui/io.github.applejuicenetz.javagui.png
+
+  - name: desktop-file
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.javagui.desktop /app/share/applications/io.github.applejuicenetz.javagui.desktop
+    sources:
+      - type: file
+        path: ./javagui/io.github.applejuicenetz.javagui.desktop
+
+  - name: metainfo
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.javagui.metainfo.xml /app/share/metainfo/io.github.applejuicenetz.javagui.metainfo.xml
+    sources:
+      - type: file
+        path: ./javagui/io.github.applejuicenetz.javagui.metainfo.xml
+
+  - name: gui-ajl-mime
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.javagui.mime.xml /app/share/mime/packages/io.github.applejuicenetz.javagui.xml
+    sources:
+      - type: file
+        path: ./javagui/io.github.applejuicenetz.javagui.mime.xml

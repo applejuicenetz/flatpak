@@ -1,0 +1,64 @@
+app-id: io.github.applejuicenetz.collector
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+command: ajcollector
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.openjdk21
+build-options:
+  no-debuginfo: true
+finish-args:
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --filesystem=~/appleJuice
+  - --env=AJ_COLLECTOR_DISABLE_UPDATE_CHECK=yes
+  - --env=PATH=/app/jre/bin:/app/bin:/usr/bin
+  - --env=JAVA_HOME=/app/jre
+modules:
+  - name: openjdk
+    buildsystem: simple
+    build-commands:
+      - /usr/lib/sdk/openjdk21/install.sh
+
+  - name: binary
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 -t /app/share/io.github.applejuicenetz.collector/ AJCollector.jar
+    sources:
+      - type: file
+        url: https://github.com/applejuicenetz/core-information-collector/releases/download/3.1.0/AJCollector.jar
+        sha256: 83bdfcc8d792a50deca07144728ec2b14e6519438adad86cb5cde5df0c98a96c
+        dest-filename: AJCollector.jar
+
+  - name: starter
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 io.github.applejuicenetz.collector.sh /app/bin/ajcollector
+    sources:
+      - type: file
+        path: ./collector/io.github.applejuicenetz.collector.sh
+
+  - name: icon
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.collector.png /app/share/icons/hicolor/512x512/apps/io.github.applejuicenetz.collector.png
+    sources:
+      - type: file
+        path: ./collector/io.github.applejuicenetz.collector.png
+
+  - name: desktop-file
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.collector.desktop /app/share/applications/io.github.applejuicenetz.collector.desktop
+    sources:
+      - type: file
+        path: ./collector/io.github.applejuicenetz.collector.desktop
+
+  - name: metainfo
+    buildsystem: simple
+    build-commands:
+      - install -Dm644 io.github.applejuicenetz.collector.metainfo.xml /app/share/metainfo/io.github.applejuicenetz.collector.metainfo.xml
+    sources:
+      - type: file
+        path: ./collector/io.github.applejuicenetz.collector.metainfo.xml

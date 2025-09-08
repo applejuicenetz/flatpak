@@ -1,0 +1,7 @@
+[Flatpak Ref]
+Title=appleJuice Collector
+Name=io.github.applejuicenetz.collector
+Branch=3.1.0
+Url=https://applejuicenetz.github.io/flatpak/repo
+IsRuntime=false
+RuntimeRepo=https://dl.flathub.org/repo/flathub.flatpakrepo

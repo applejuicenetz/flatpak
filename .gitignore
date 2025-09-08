@@ -1,3 +1,5 @@
 .flatpak-builder/
 .idea/
 build/
+
+*.asc

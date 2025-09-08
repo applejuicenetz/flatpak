@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+    <id>io.github.applejuicenetz.core</id>
+    <name>appleJuice Core</name>
+    <summary>appleJuice Network P2P Client</summary>
+    <description>
+        <p>Client for the appleJuice P2P Network</p>
+    </description>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>proprietary</project_license>
+    <developer_name>appleJuiceNETZ</developer_name>
+    <developer>appleJuiceNETZ</developer>
+    <developer id="io.github.applejuicenetz">
+        <name>appleJuiceNETZ</name>
+    </developer>
+    <url type="homepage">https://applejuicenetz.github.io/</url>
+    <url type="faq">https://applejuicenetz.github.io/faq/</url>
+    <releases>
+        <release version="0.31.149.113" type="stable"/>
+    </releases>
+    <categories>
+        <category>Network</category>
+    </categories>
+    <recommends>
+        <internet>always</internet>
+    </recommends>
+    <keywords>
+        <keyword translate="no">appleJuice</keyword>
+        <keyword>p2p</keyword>
+    </keywords>
+    <suggests>
+        <id>io.github.applejuicenetz.javagui</id>
+        <id>io.github.applejuicenetz.collector</id>
+    </suggests>
+    <screeshots>
+        <screenshot type="default">
+            <image>https://applejuicenetz.github.io/assets/screenshots/applejuice_core.png</image>
+            <caption>Main Window</caption>
+        </screenshot>
+    </screeshots>
+</component>

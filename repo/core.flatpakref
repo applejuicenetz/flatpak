@@ -1,0 +1,7 @@
+[Flatpak Ref]
+Title=appleJuice Core
+Name=io.github.applejuicenetz.core
+Branch=0.31.149.113
+Url=https://applejuicenetz.github.io/flatpak/repo
+IsRuntime=false
+RuntimeRepo=https://dl.flathub.org/repo/flathub.flatpakrepo
