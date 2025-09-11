@@ -6,8 +6,7 @@ fi
 
 echo $$ > /tmp/AJCore.lock
 
-JAVA_ARGS="-Djava.net.preferIPv4Stack=true -Dsun.java2d.xrender=false -splash:splash.png $JAVA_ARGS"
-#  flatpak override --user --env=JAVA_ARGS="-Xmx1024M" io.github.applejuicenetz.core
+JAVA_ARGS="-Djava.net.preferIPv4Stack=true -splash:splash.png $JAVA_ARGS"
 
 if [ x$DISPLAY != x ] ; then
   GUI_ARGS="--withgui"

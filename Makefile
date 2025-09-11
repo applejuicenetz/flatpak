@@ -3,6 +3,8 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
+.DEFAULT_GOAL := build-local-all
+
 gpg-key-import:
 	gpg --import "${GPG_KEY_FILE}"
 

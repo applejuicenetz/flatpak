@@ -1,7 +1,0 @@
-[Flatpak Ref]
-Title=appleJuice Gui
-Name=io.github.applejuicenetz.gui
-Branch=0.85.1
-Url=https://applejuicenetz.github.io/flatpak/repo
-IsRuntime=false
-RuntimeRepo=https://dl.flathub.org/repo/flathub.flatpakrepo

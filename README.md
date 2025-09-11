@@ -4,20 +4,22 @@ Der einfachste Weg, die `appleJuice` Programme auf einem Linux-System zu install
 
 ## Repository hinzufügen
 
+Das `appleJuice` Repository muss immer hinzugefügt werden, bevor die `appleJuice` Programme installiert werden können.
+
 ```shell
 sudo flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 sudo flatpak remote-add --if-not-exists applejuice https://applejuicenetz.github.io/flatpak/repo/applejuice.flatpakrepo
 ```
 
-> [!IMPORTANT]  
-> Es ist wichtig, dass Flathub als erstes Repository hinzugefügt wird um Abhängigkeiten korrekt aufzulösen.
+> Es ist wichtig, dass das Flathub Repository hinzugefügt wird, um Abhängigkeiten korrekt aufzulösen.
 
-Danach mit einem Tool der Wahl (z.B. GNOME Software, KDE Discover, etc.) nach `appleJuice` suche und installieren.
-Meldung The App.. requires runtime org.freedesktop.Platform/aarch64/0.31.149.113
+## 1. installation im Desktop
 
-Die Programme sind dann im Anwendungsmenü in der Kategorie `Internet` zu finden.
+Mit einem Tool der Wahl (z.B. `GNOME Software`, `KDE Discover`, etc.) nach `appleJuice` suchen.
 
-## 1. alternative über ein Terminal installieren
+Die Programme sind nach der Installation im Anwendungsmenü in der Kategorie `Internet` zu finden.
+
+## 2. installation über die Kommandozeile
 
 ```shell
 sudo flatpak install applejuice io.github.applejuicenetz.core
@@ -25,8 +27,7 @@ sudo flatpak install applejuice io.github.applejuicenetz.javagui
 sudo flatpak install applejuice io.github.applejuicenetz.collector
 ```
 
-
-## 2. alternative installation ohne Repository
+## 3. standalone installation ohne Repository
 
 ```shell
 sudo flatpak install https://applejuicenetz.github.io/flatpak/repo/core.flatpakref
