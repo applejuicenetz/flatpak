@@ -3,7 +3,7 @@ ifneq (,$(wildcard ./.env))
     export
 endif
 
-.DEFAULT_GOAL := build-local-all
+.DEFAULT_GOAL := build-stable-all
 
 gpg-key-import:
 	gpg --import "${GPG_KEY_FILE}"
@@ -73,6 +73,7 @@ build-stable-collector-aarch64:
 	flatpak-builder --arch="aarch64" --default-branch="${VERSION_COLLECTOR}" --repo="./repo/" --force-clean "./build/collector/aarch64/" "./flatpak/io.github.applejuicenetz.collector.yaml"
 
 build-stable-all:
+	@$(MAKE) gpg-key-import
 	@$(MAKE) build-stable-core-x86_64
 	@$(MAKE) build-stable-core-aarch64
 	@$(MAKE) build-stable-javagui-x86_64

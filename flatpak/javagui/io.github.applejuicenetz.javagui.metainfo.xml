@@ -15,7 +15,7 @@
     <url type="homepage">https://applejuicenetz.github.io/</url>
     <url type="faq">https://applejuicenetz.github.io/faq/</url>
     <releases>
-        <release version="0.85.1" type="stable"/>
+        <release version="0.85.2" type="stable"/>
     </releases>
     <categories>
         <category>Network</category>

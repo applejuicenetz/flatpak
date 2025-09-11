@@ -9,9 +9,9 @@ build-options:
   no-debuginfo: true
 finish-args:
   - --share=network
-  - --socket=wayland
-  - --socket=fallback-x11
-  - --filesystem=home
+  - --socket=x11
+  - --socket=pulseaudio
+  - --filesystem=~/appleJuice:create
   - --env=PATH=/app/jre/bin:/app/bin:/usr/bin
   - --env=JAVA_HOME=/app/jre
 modules:
@@ -27,9 +27,9 @@ modules:
       - mv AJCoreGUI/* /app/share/io.github.applejuicenetz.javagui/
     sources:
       - type: archive
-        url: https://github.com/applejuicenetz/gui-java/releases/download/0.85.1/AJCoreGUI.zip
+        url: https://github.com/applejuicenetz/gui-java/releases/download/0.85.2/AJCoreGUI.zip
         strip-components: 0
-        sha256: 05a030929198dca3ee9bd185b1a5f5c7fed0afa6e72ef96f6cf086ba0ff05cb7
+        sha256: 7374fa015baf9a124720c5648fa636e9d12bef4b457b4901cb2fa26d7d621a96
         dest: AJCoreGUI
 
   - name: starter

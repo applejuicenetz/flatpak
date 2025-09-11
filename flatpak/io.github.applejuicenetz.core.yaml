@@ -9,9 +9,8 @@ build-options:
   no-debuginfo: true
 finish-args:
   - --share=network
-  - --socket=wayland
-  - --socket=fallback-x11
-  - --filesystem=home
+  - --socket=x11
+  - --filesystem=~/appleJuice:create
   - --filesystem=/media
   - --filesystem=/run/media
   - --filesystem=/mnt
@@ -52,20 +51,6 @@ modules:
         dest-filename: libajnetmask.so
         only-arches:
           - aarch64
-
-      - type: file
-        url: https://github.com/applejuicenetz/ajnetmask/releases/download/1.0.0/libajnetmask-arm.so
-        sha256: cfae6fdc8dd7f48c5cfdf190f8d80fc1f8bcb134af2afde53a589fc1a30a8b70
-        dest-filename: libajnetmask.so
-        only-arches:
-          - arm
-
-      - type: file
-        url: https://github.com/applejuicenetz/ajnetmask/releases/download/1.0.0/libajnetmask-386.so
-        sha256: d8ae1af7e9a538381fff4bc3f3beb44022ae1cef31cae417717ce40e3388721a
-        dest-filename: libajnetmask.so
-        only-arches:
-          - i386
 
   - name: starter
     buildsystem: simple
