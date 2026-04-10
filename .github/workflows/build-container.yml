@@ -1,0 +1,105 @@
+name: 'build-container'
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Dockerfile'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  container:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: login to ghcr.io container registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for container image
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}}
+          images: |
+            name=ghcr.io/${{ github.repository }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          provenance: false
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Delete old GHCR versions
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const owner = context.repo.owner;
+            const packageName = context.repo.repo.toLowerCase();
+
+            async function listVersions() {
+              try {
+                const { data } = await github.rest.packages.getAllPackageVersionsForPackageOwnedByOrg({
+                  package_type: 'container',
+                  package_name: packageName,
+                  org: owner,
+                  per_page: 100
+                });
+                return { data, ownerType: 'org' };
+              } catch (e) {
+                if (e.status !== 404) throw e;
+              }
+
+              const { data } = await github.rest.packages.getAllPackageVersionsForPackageOwnedByUser({
+                package_type: 'container',
+                package_name: packageName,
+                username: owner,
+                per_page: 100
+              });
+              return { data, ownerType: 'user' };
+            }
+
+            const { data: versions, ownerType } = await listVersions();
+            const deletions = versions.filter(v => {
+              const tags = v.metadata?.container?.tags || [];
+              return !tags.includes('latest');
+            });
+
+            core.info(`Found ${versions.length} versions, deleting ${deletions.length} old versions.`);
+
+            for (const v of deletions) {
+              if (ownerType === 'org') {
+                await github.rest.packages.deletePackageVersionForOrg({
+                  package_type: 'container',
+                  package_name: packageName,
+                  org: owner,
+                  package_version_id: v.id
+                });
+              } else {
+                await github.rest.packages.deletePackageVersionForUser({
+                  package_type: 'container',
+                  package_name: packageName,
+                  username: owner,
+                  package_version_id: v.id
+                });
+              }
+              core.info(`Deleted package version id=${v.id}`);
+            }
+

@@ -1,0 +1,10 @@
+.flatpak-builder/
+.idea/
+build/
+repo/**
+!repo/applejuice.flatpakrepo
+!repo/applejuice.gpg
+!repo/applejuice.png
+
+*.asc
+.DS_Store

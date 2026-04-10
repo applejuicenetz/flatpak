@@ -1,0 +1,126 @@
+name: 'build-flatpak'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'flatpak/**'
+  schedule:
+    - cron: '0 2 * * 0'  # Weekly on Sunday at 2 AM UTC
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up QEMU (for aarch64)
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Pull flatpak builder image
+        run: docker pull ghcr.io/${{ github.repository }}:latest
+
+      - name: Create GPG key file
+        run: |
+          echo "${{ secrets.FLATPAK_GPG_KEY }}" > ./applejuice-secret.asc
+        shell: bash
+
+      - name: Build flatpak packages
+        run: |
+          docker run --rm \
+            --privileged \
+            -v "$(pwd):/workdir" \
+            -e GPG_KEY_FILE="applejuice-secret.asc" \
+            -e GPG_KEY="${{ vars.FLATPAK_GPG_KEY }}" \
+            ghcr.io/${{ github.repository }}:latest \
+            bash -c "make build-all"
+        shell: bash
+
+      - name: Prepare Pages content
+        run: |
+          sudo rm -rf ./pages
+          sudo mkdir -p ./pages
+          sudo chown -R "$(id -u):$(id -g)" ./pages
+          cp ./README.md ./pages/README.md
+          mkdir -p ./pages/repo
+          sudo cp -R ./repo/. ./pages/repo/
+          for f in applejuice.flatpakrepo applejuice.gpg applejuice.png; do
+            if [ -f "./repo/$f" ]; then
+              sudo cp "./repo/$f" "./pages/repo/$f"
+            fi
+          done
+          sudo rm -f ./pages/repo/.lock
+          sudo chown -R "$(id -u):$(id -g)" ./pages
+        shell: bash
+
+      - name: Render README as index page
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const md = fs.readFileSync('README.md', 'utf8');
+            const html = await github.rest.markdown.render({
+              text: md,
+              mode: 'gfm',
+              context: process.env.GITHUB_REPOSITORY
+            });
+
+            const page = `<!doctype html>
+            <html lang="de">
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>appleJuice Flatpak Repository</title>
+              <link rel="icon" type="image/png" href="repo/applejuice.png">
+              <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5.9.0/github-markdown.min.css">
+              <style>
+                body { box-sizing: border-box; margin: 0; }
+                .markdown-body { max-width: 980px; margin: 0 auto; padding: 24px; }
+              </style>
+            </head>
+            <body>
+              <article class="markdown-body">${html.data}</article>
+            </body>
+            </html>`;
+
+            fs.writeFileSync('pages/index.html', page, 'utf8');
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./pages
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
