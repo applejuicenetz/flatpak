@@ -107,7 +107,7 @@ jobs:
             fs.writeFileSync('pages/index.html', page, 'utf8');
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./pages
 
