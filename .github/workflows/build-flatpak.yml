@@ -26,8 +26,6 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GPG_KEY: ${{ vars.FLATPAK_GPG_KEY }}
-      GPG_KEY_FILE: ${{ runner.temp }}/applejuice-secret.asc
-      GNUPGHOME: ${{ runner.temp }}/flatpak-gnupg
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -38,6 +36,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends flatpak ostree gnupg jq gh
+
+      - name: Set GPG paths
+        run: |
+          echo "GPG_KEY_FILE=${RUNNER_TEMP}/applejuice-secret.asc" >> "$GITHUB_ENV"
+          echo "GNUPGHOME=${RUNNER_TEMP}/flatpak-gnupg" >> "$GITHUB_ENV"
+        shell: bash
 
       - name: Create GPG key file
         run: |
