@@ -54,7 +54,7 @@ jobs:
 
       - name: Import release bundles and sign repository
         run: |
-          make sync-all
+          make sync-all GPG_KEY_FILE="$GPG_KEY_FILE" GPG_KEY="$GPG_KEY"
         shell: bash
 
       - name: Remove signing key
