@@ -4,7 +4,8 @@
       <settings>
         <option name="imageTag" value="applejuicenetz/flatpak-build:dev" />
         <option name="containerName" value="flatpak-builder" />
-        <option name="commandLineOptions" value="--privileged --env-file .env" />
+        <option name="commandLineOptions" value="--env-file .env" />
+        <option name="command" value="make sync-all" />
         <option name="sourceFilePath" value="Dockerfile" />
         <option name="volumeBindings">
           <list>
