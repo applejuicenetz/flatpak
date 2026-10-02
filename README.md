@@ -66,11 +66,11 @@ Stable-Release Assets hat, ersetzt es diesen Stand. Fehlende einzelne oder mehrd
 nicht als Ersatz gewählt. Vor dem Import werden alle Bundles heruntergeladen
 und vorhandene GitHub-SHA256-Digests geprüft.
 
-Für Core werden der neueste reguläre Release und zusätzlich der nach
-Veröffentlichungsdatum neueste Pre-Release verwendet. Der GitHub-Status
+Für Core werden der neueste reguläre Release und zusätzlich der neueste
+Pre-Release verwendet, sofern er neuer als der Stable-Release ist. Der GitHub-Status
 `prerelease` entscheidet über `//beta`, unabhängig vom Tag oder Bundle-Branch.
-Ohne Pre-Release werden nur die sechs Stable-Bundles importiert; mit Pre-Release
-kommen zwei Core-Beta-Bundles hinzu. Der Core-Workflow muss diese Assets zuerst
+Gibt es kein neueres Pre-Release, folgt `core//beta` dem Stable-Release, damit
+Beta-Nutzer weiter Updates erhalten und der Branch nicht verschwindet. Der Core-Workflow muss diese Assets zuerst
 im Repository `applejuicenetz/core` veröffentlichen.
 
 Voraussetzungen: `gh`, `jq`, `flatpak`, `ostree`, `gpg`, `sha256sum` und `make`.

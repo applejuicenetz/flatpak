@@ -56,10 +56,14 @@ else
     printf 'app/io.github.applejuicenetz.core/x86_64/stable\napp/io.github.applejuicenetz.core/aarch64/stable\n' >> "$WORK_DIR/carry-over.txt"
 fi
 gh api --paginate "repos/${CORE_REPO}/releases?per_page=100" \
-    | jq -s '[.[][] | select(.draft == false and .prerelease == true)] | sort_by(.published_at) | last' \
+    | jq -s --arg stable_date "$(jq -r '.published_at' "$WORK_DIR/core.json")" \
+        '[.[][] | select(.draft == false and .prerelease == true and .published_at > $stable_date)] | sort_by(.published_at) | last' \
     > "$WORK_DIR/core-beta.json"
 if [[ "$(jq -r 'type' "$WORK_DIR/core-beta.json")" != null ]]; then
     queue_release "$CORE_REPO" io.github.applejuicenetz.core AJCore beta "$WORK_DIR/core-beta.json"
+elif jq -e 'any(.assets[]; .name | test("\\.flatpak$"))' "$WORK_DIR/core.json" >/dev/null; then
+    printf 'No Core pre-release newer than stable; core//beta follows stable.\n'
+    queue_release "$CORE_REPO" io.github.applejuicenetz.core AJCore beta "$WORK_DIR/core.json"
 else
     printf 'No Core pre-release; no beta bundles imported.\n'
 fi
