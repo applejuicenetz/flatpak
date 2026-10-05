@@ -4,15 +4,6 @@ on:
   workflow_dispatch:
   repository_dispatch:
     types: [flatpak-release]
-  push:
-    branches:
-      - main
-    paths:
-      - 'scripts/import-bundles.sh'
-      - 'Makefile'
-      - '.github/workflows/build-flatpak.yml'
-  schedule:
-    - cron: '0 2 * * 0'  # Weekly on Sunday at 2 AM UTC
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
